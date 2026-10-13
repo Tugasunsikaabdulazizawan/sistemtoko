@@ -14,7 +14,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('category')->latest()->paginate(10);
+ 
+        $lowStockThreshold = config('inventory.low_stock_threshold', 10);
+
+        return view(
+            'master-data.product.index',
+            compact('products', 'lowStockThreshold')
+        );
     }
 
     /**

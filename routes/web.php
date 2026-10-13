@@ -16,6 +16,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
 
+Route::get('/categories', [CategoryController::class, 'index'])
+    ->name('categories.index');
+
 Route::get('/', function () {
     return view('welcome');
 });
