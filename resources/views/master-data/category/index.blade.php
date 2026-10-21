@@ -8,6 +8,17 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-card>
+                @if (session('success'))
+                    <div class="bg-green-100 text-green-700 p-3 mb-4 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="bg-red-100 text-red-700 p-3 mb-4 rounded">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -39,6 +50,25 @@
                                         <span class="px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">
                                             {{ $category->products_count }}
                                         </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-center whitespace-nowrap">
+                                        <a href="{{ route('categories.edit', $category) }}"
+                                           class="text-indigo-600 hover:text-indigo-800 mr-3">
+                                            Ubah
+                                        </a>
+
+                                        <form action="{{ route('categories.destroy', $category) }}"
+                                              method="POST"
+                                              class="inline"
+                                              onsubmit="return confirm('Yakin ingin menghapus kategori {{ $category->name }}?')">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                    class="text-red-600 hover:text-red-800">
+                                                Hapus
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
