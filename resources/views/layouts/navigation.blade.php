@@ -27,8 +27,8 @@
                     Transaksi
                 </a>
                 @if (auth()->user()->role === 'kasir')
-                    <a href="{{ route('pos.history') }}"
-                        class="{{ request()->routeIs('pos.history') ? 'text-indigo-600' : 'text-gray-500' }}">
+                    <a href="{{ route('pos.riwayat') }}"
+                        class="{{ request()->routeIs('pos.riwayat') ? 'text-indigo-600' : 'text-gray-500' }}">
                         Riwayat Transaksi Saya
                     </a>
                 @endif

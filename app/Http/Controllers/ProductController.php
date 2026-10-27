@@ -6,6 +6,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -74,9 +76,36 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Product $product)
     {
-        //
+        $product->load(['transactionDetails.transaction']);
+    
+        $totalTerjual = $product->transactionDetails->sum('qty');
+    
+        $riwayat = $product->transactionDetails()
+            ->with('transaction')
+            ->latest()
+            ->take(10)
+            ->get();
+    
+        $peringkatHarian = $product->transactionDetails()
+            ->join(
+                'transactions',
+                'transaction_details.transaction_id',
+                '=',
+                'transactions.id'
+            )
+            ->select(
+                DB::raw('DATE(transactions.created_at) as tanggal'),
+                DB::raw('SUM(transaction_details.qty) as total_qty')
+            )
+            ->groupBy(DB::raw('DATE(transactions.created_at)'))
+            ->orderByDesc('total_qty')
+            ->orderByDesc('tanggal')
+            ->limit(5)
+            ->get();
+
+        return view('master-data.product.show', compact('product', 'totalTerjual', 'riwayat', 'peringkatHarian'));
     }
 
     /**
